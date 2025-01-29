@@ -41,43 +41,84 @@
             </form>
         </div>
         <script>
-            document.getElementById('calculator-form').addEventListener('submit', function(event) {
+            //Function declaration:
+            function handleCalculation(event) {
                 event.preventDefault();
+            
+                const X = parseFloat(document.getElementById('x').value);
+                const Y = parseFloat(document.getElementById('y').value);
+                let result;
+            
+                const operation = document.querySelector('input[name="operation"]:checked');
+            
+                if (!operation) {
+                    document.getElementById('result').innerHTML = 'Choose an operation to make a calculation.';
+                    return;
+                }
+            
+                switch (operation.value) {
+                    case "PLUS": result = X + Y; break;
+                    case "MINUS": result = X - Y; break;
+                    case "MULTIPLY": result = X * Y; break;
+                    case "DIVIDE":
+                        result = Y === 0 ? "Cannot divide by zero!" : X / Y;
+                        break;
+                    default: result = "Invalid operation!";
+                }
+            
+                document.getElementById('result').innerHTML = result;
+            }
+            
+            //Function Expression:
+            const handleCalculation1 = function(event) {
+                event.preventDefault();
+            
+                const X = parseFloat(document.getElementById('x').value);
+                const Y = parseFloat(document.getElementById('y').value);
+                let result;
+            
+                const operation = document.querySelector('input[name="operation"]:checked');
+            
+                if (!operation) {
+                    document.getElementById('result').innerHTML = 'Choose an operation to make a calculation.';
+                    return;
+                }
+            
+                switch (operation.value) {
+                    case "PLUS": result = X + Y; break;
+                    case "MINUS": result = X - Y; break;
+                    case "MULTIPLY": result = X * Y; break;
+                    case "DIVIDE":
+                        result = Y === 0 ? "Cannot divide by zero!" : X / Y;
+                        break;
+                    default: result = "Invalid operation!";
+                }
+            
+                document.getElementById('result').innerHTML = result;
+            }
+
+            //Arrow function:
+            document.getElementById('calculator-form').addEventListener('submit', (e) => {
+                e.preventDefault();
 
                 const X = parseFloat(document.getElementById('x').value);
                 const Y = parseFloat(document.getElementById('y').value);
                 let result;
 
                 const operation = document.querySelector('input[name="operation"]:checked');
-                console.log(operation);
 
-                if (!operation) {
-                    document.getElementById('result').innerHTML = 'Choose an operation to make a calculation.';
+                if(!operation) {
+                    document.getElementById('result').innerHTML = "choose an operation";
                     return;
                 }
 
                 switch(operation.value) {
-                    case "PLUS":
-                        result = X + Y;
-                        break;
-                    case "MINUS":
-                        result = X - Y;
-                        break;
-                    case "MULTIPLY":
-                        result = X * Y;
-                        break;
-                    case "DIVIDE":
-                        if (Y == 0) {
-                            result = "Cannot divided by zero!";
-                        } else {
-                            result = X / Y;
-                        }
-                        break;
-                    default:
-                        result = "invalid operation :v";
-                        break;
+                    case "PLUS": result = X + Y; break;
+                    case "MINUS": result = X - Y; break;
+                    case "MULTIPLY": result = X * Y; break;
+                    case "DIVIDE": Y == 0 ? result = "cannot divided by zero" : result = X / Y; break;
+                    default: result = "invalid operation"; break;
                 }
-
 
                 document.getElementById('result').innerHTML = result;
             });
