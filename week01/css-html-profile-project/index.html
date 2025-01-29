@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, intial-scale=1.0">
+        <title>HTML simple profile page</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            h1 {
+                margin: 10px 0;
+            }
+            button:hover {
+                background: aqua;
+                scale: 1.1;
+            }
+            @media screen and (max-width: 600px) {
+                img {
+                    visibility: hidden;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img src="./image.png" alt="avatar">
+            <h1>Hobbies</h1>
+            <ul>
+                <li>Football</li>
+                <li>Guitar</li>
+                <li>Hair&Clothes</li>
+            </ul>
+            <form>
+                <h1>Send me a message</h1>
+                <label for="name">Name</label>
+                <input type="text" id="name" value="Enter your name" name="name" required><br>
+                <label for="message">Message</label>
+                <textarea name="message" id="message" required></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </body>
+</html>
