@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Simple calculator</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <form id="calculator-form">
+                <div class="container">
+                    <label for="x">X</label>
+                    <input type="number" id="x" name="x">
+                    <label for="y">Y</label>
+                    <input type="number" id="y" name="y">
+                </div>
+                <p>Choose operation: </p>
+                <input type="radio" id="plus" value="PLUS" name="operation">
+                <label for="plus">+</label><br>
+                <input type="radio" id="minus" value="MINUS" name="operation">
+                <label for="minus">-</label><br>
+                <input type="radio" id="multiply" value="MULTIPLY" name="operation">
+                <label for="multiply">x</label><br>
+                <input type="radio" id="divide" value="DIVIDE" name="operation">
+                <label for="divide">:</label><br>
+                <p id="result"></p>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+        <script>
+            document.getElementById('calculator-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const X = parseFloat(document.getElementById('x').value);
+                const Y = parseFloat(document.getElementById('y').value);
+                let result;
+
+                const operation = document.querySelector('input[name="operation"]:checked');
+                console.log(operation);
+
+                if (!operation) {
+                    document.getElementById('result').innerHTML = 'Choose an operation to make a calculation.';
+                    return;
+                }
+
+                switch(operation.value) {
+                    case "PLUS":
+                        result = X + Y;
+                        break;
+                    case "MINUS":
+                        result = X - Y;
+                        break;
+                    case "MULTIPLY":
+                        result = X * Y;
+                        break;
+                    case "DIVIDE":
+                        if (Y == 0) {
+                            result = "Cannot divided by zero!";
+                        } else {
+                            result = X / Y;
+                        }
+                        break;
+                    default:
+                        result = "invalid operation :v";
+                        break;
+                }
+
+
+                document.getElementById('result').innerHTML = result;
+            });
+        </script>
+    </body>
+</html>
