@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .home {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f4f4f4;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 12px;
+        }
+
+        .home img {
+            border-radius: 50%;
+        }
+
+        .projects {
+            margin: 12px 0;
+            padding: 12px;
+        }
+
+        .project-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        
+        .project-item {
+            margin: 12px 0;
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact {
+            background: #f4f4f4;
+            margin: 12px 0;
+            padding: 20px;
+        }
+
+        form {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        form label {
+            margin-top: 12px;
+        }
+
+        input, button, textarea {
+            padding: 12px 5px;
+        }
+
+        #noti {
+            font-weight: bold;
+            margin: 22px 0;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <section class="home">
+        <img src="./Animated_Fox.jpg" alt="avt">
+        <h1>Welcome To My Portfolio!</h1>
+        <p>I am a developer fox, on my way doing big things. Scroll down for more of me :P.</p>
+    </section>
+    <section class="projects">
+        <h2>Mini projects this week</h2>
+        <div class="project-list">
+            <div class="project-item">
+                <h3>HTML</h3>
+                <p>Simple HTML profile</p>
+            </div>
+            <div class="project-item">
+                <h3>CSS Basics</h3>
+                <p>Simple HTML + CSS profile</p>
+            </div>
+            <div class="project-item">
+                <h3>JS Basics</h3>
+                <p>Simple HTML + JS calculator app</p>
+            </div>
+            <div class="project-item">
+                <h3>JS DOM</h3>
+                <p>Simple HTML + JS to-do list app</p>
+            </div>
+            <div class="project-item">
+                <h3>CSS Advanced</h3>
+                <p>Simple HTML + CSS + JS landing page</p>
+            </div>
+            <div class="project-item">
+                <h3>JS Advanced</h3>
+                <p>Simple HTML + CSS + JS transactions management app</p>
+            </div>
+        </div>
+    </section>
+    <section class="contact">
+        <h2>Send me a message</h2>
+        <form id="contact-form">
+            <label for="name">Name</label>
+            <input type="text" id="name">
+            <label for="email">Email</label>
+            <input type="email" id="email">
+            <label for="message">Message</label>
+            <textarea id="message"></textarea>
+            <p id="noti"></p>
+            <button type="submit">Send</button>
+        </form>
+    </section>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            const noti = document.getElementById('noti');
+
+            if (!name || !email || !message) {
+                noti.classList.add('error');
+                noti.classList.remove('success');
+                noti.textContent = 'Please fill out all informations!';
+                return;
+            }
+
+            noti.classList.add('success');
+            noti.classList.remove('error');
+            noti.textContent = 'Messages sent successfully!';
+        });
+    </script>
+</body>
+</html>
