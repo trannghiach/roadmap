@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="body">
+        <div class="header">
+            <a href="#">
+                <img class="logo" src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/Layer_1v2.png?clxf=t_general_anysize">
+            </a>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-link">
+                <a href="#">SQUAD</a>
+            </div>
+        </div>
+        <div class="home-container">
+            <div class="grid-container">
+                <div class="grid-item">
+                    <div class="spinner"></div>
+                    <img 
+                        onload="hideSpinner(this)"
+                        src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/-%20MENS%20Player%20profile%20TEAM%20PAGE%20JS.png?clxf=t_general_anysize">
+                </div>
+                <div class="grid-item">
+                    <div class="spinner"></div>
+                    <img 
+                        onload="hideSpinner(this)"
+                        src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/-%20MENS%20Player%20profile%20CO_JXyRxNr.png?clxf=t_general_anysize">
+                </div>
+                <div class="grid-item">
+                    <div class="spinner"></div>
+                    <img 
+                        onload="hideSpinner(this)"
+                        src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/-%20MENS%20Player%20profile%20VK.png?clxf=t_general_anysize">
+                </div>
+                <div class="grid-item">
+                    <div class="spinner"></div>
+                    <img 
+                        onload="hideSpinner(this)"
+                        src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/-%20MENS%20Player%20profile%20BEK%203.png?clxf=t_general_anysize">
+                </div>
+                <div class="grid-item">
+                    <div class="spinner"></div>
+                    <img 
+                        onload="hideSpinner(this)"
+                        src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/-%20MENS%20Player%20profile%20JVa_m5326Uu.png?clxf=t_general_anysize">
+                </div>
+                <div class="grid-item">
+                    <div class="spinner"></div>
+                    <img 
+                        onload="hideSpinner(this)"
+                        src="https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/-%20MENS%20Player%20profile.png?clxf=t_general_anysize">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function hideSpinner(imgElement) {
+            setTimeout(() => {
+                imgElement.style.display = 'block';
+                imgElement.previousElementSibling.style.display = 'none';
+            }, 2000);
+        };
+        window.onload = () => {
+            const imgs = document.querySelectorAll('.grid-item img');
+            imgs.forEach(img => {
+                if(img.complete) {
+                    hideSpinner(img);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

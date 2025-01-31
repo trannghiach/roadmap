@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.header {
+    height: 8vw !important;
+    width: 100% !important;   
+    display: flex; 
+    align-content: center;
+    padding: 3%;
+    padding-top: 2%;
+    background: #164194;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-bar {
+    background: #D0D0D0;
+    height: 3.2vw;
+    padding: 2% 16%;
+    display: flex;
+    align-items: center;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #164194;
+    font-weight: 900;
+    border-bottom: 3px solid #164194;
+}
+
+.logo {
+    width: 12vw;
+}
+
+.home-container {
+    background-image: url('https://cmscdnus.yinzcam.com/Toolbox/jsoneditor/FA_LEI/BG%20gradient%20blank%20(1).png?clxf=t_background_anysize');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    flex: 1;
+    padding: 2% 12%;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.grid-item {
+    position: relative;
+    height: 36vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    display: none;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+}
+
+.grid-item img:hover {
+    scale: 1.02;
+}
+
+.spinner {
+    width: 12%;
+    aspect-ratio: 1 / 1;
+    border: 5px solid ghostwhite;
+    border-radius: 50%;
+    border-top: 5px solid lightskyblue;
+    animation: spin 1s linear infinite;
+    position: absolute;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media screen and (max-width: 1024px) {
+    
+}
+
+
+  

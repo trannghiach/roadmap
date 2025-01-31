@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>simple To-do List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+            font-style: italic;
+        }
+        #task-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;   
+            gap: 20px;
+        }
+        #error {
+            color: red  ;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-do List</h1>
+        <form id="task-form">
+            <label for="task-input">Type a Task</label>
+            <input type="text" placeholder="..." id="task-input">
+            <button type="submit">Add</button><br>
+            <div id="error"></div>
+        </form>
+        <div id="task-list">
+            <!--here-->
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+        })
+
+        document.getElementById('task-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            addTask();
+        })
+
+        function addTask() {
+            const taskInput = document.getElementById('task-input');
+            const task = taskInput.value.trim();
+
+            if(task == '') {
+                document.getElementById('error').innerText = 'type something pls...';
+                return;
+            }
+
+            const taskList = document.getElementById('task-list');
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <input type='checkbox' class='task-checkbox'>
+                <span>${task}</span>
+                <button class="dlt-btn">x</button>
+            `;
+
+            div.querySelector('.task-checkbox').addEventListener('change', (e) => {
+                const span = div.querySelector('span');
+                if(e.target.checked) {
+                    span.classList.add('completed');
+                } else {
+                    span.classList.remove('completed');
+                }
+                saveTasks();
+            })
+
+            div.querySelector('.dlt-btn').addEventListener('click', () => {
+                taskList.removeChild(div);
+                saveTasks();
+            })
+
+            taskList.appendChild(div);
+            taskInput.value = '';
+            document.getElementById('error').innerText = '';
+            saveTasks();
+        }
+
+        function saveTasks() {
+            const tasks = [];
+            const taskListItems = document.querySelectorAll('#task-list div')
+
+            taskListItems.forEach(item => {
+                const taskText = item.querySelector('span').textContent;
+                const isCompleted = item.querySelector('.task-checkbox').checked;
+                tasks.push({ taskText, isCompleted });
+            });
+
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            console.group('Todo List Debug');
+            console.log('Current tasks:', savedTasks);
+            console.groupEnd();
+            const taskList = document.getElementById('task-list');
+            savedTasks.forEach(task => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.isCompleted ? 'checked' : ''}>
+                    <span class="${task.isCompleted ? 'completed' : ''}">${task.taskText}</span>
+                    <button class="dlt-btn">x</button>
+                `;
+
+                div.querySelector('.task-checkbox').addEventListener('change', (e) => {
+                    const span = div.querySelector('span');
+                    if(e.target.checked) {
+                        span.classList.add('completed');
+                    } else {
+                        span.classList.remove('completed');
+                    }
+                    saveTasks();
+                });
+
+                div.querySelector('.dlt-btn').addEventListener('click', () => {
+                    taskList.removeChild(div);
+                    saveTasks();
+                });
+
+                taskList.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
