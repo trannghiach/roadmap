@@ -8,6 +8,9 @@ const balance = document.getElementById('balance');
 
 const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
+/**
+* Display all the transactions
+*/
 function displayTransactions() {
     transactionList.innerHTML = '';
     transactions.forEach((transaction, index) => {
@@ -20,6 +23,9 @@ function displayTransactions() {
     });
 };
 
+/**
+* Handle the event when user click the add transaction btn
+*/
 addTransactionBtn.addEventListener('click', () => {
     const type = transactionType.value;
     const amount = parseFloat(transactionAmount.value);
@@ -39,6 +45,9 @@ addTransactionBtn.addEventListener('click', () => {
     transactionAmount.value='';
 });
 
+/**
+* Calculate total incomes, expenses and balance from the transactions
+*/
 function calculateTotals() {
     const totalIncomesAmount = transactions
         .filter(transaction => transaction.type == 'income')
@@ -53,6 +62,9 @@ function calculateTotals() {
     balance.textContent = totalIncomesAmount - totalExpensesAmount;
 }
 
+/**
+* Handle the event when user click on delete transaction button
+*/
 function deleteTransaction(index) {
     transactions.splice(index, 1);
     localStorage.setItem('transactions', JSON.stringify(transactions));
