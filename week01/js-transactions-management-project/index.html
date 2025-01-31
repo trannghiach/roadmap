@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Transaction Management App</h1>
+
+        <div>
+            <label for="type">Transaction type:</label>
+            <select id="type">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="amount">Transaction amount:</label>
+            <input type="number" id="amount">
+        </div>
+
+        <div>
+            <button id="add-transaction-btn"">Add Transaction</button>
+        </div>
+
+        <div>
+            <ul id="transaction-list">
+
+            </ul>
+        </div>
+
+        <h3>Total Incomes: <span id="total-incomes"></span></h3>
+        <h3>Total Expenses: <span id="total-expenses"></span></h3>
+        <h3>Balance: <span id="balance"></span></h3>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
