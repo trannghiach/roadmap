@@ -1,9 +1,8 @@
 import React from 'react'
 
-const Footer = () => {
+const Footer = ({ title }) => {
   return (
-    <div className='flex items-center px-12 bottom-0 left-0 w-full fixed'>© @lilsadfoqs roadmap 2025</div>
+    <div className='flex items-center px-12 bottom-0 left-0 w-full fixed'>{title}</div>
   )
 }
-
 export default Footer;

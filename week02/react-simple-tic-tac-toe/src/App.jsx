@@ -7,9 +7,9 @@ function App() {
   return (
     <>
       <div className="min-h-screen">
-        <Header />
+        <Header title="x TIC TAC TOE o" />
         <Game />
-        <Footer />
+        <Footer title="© @lilsadfoqs roadmap 2025" />
       </div>
     </>
   )
