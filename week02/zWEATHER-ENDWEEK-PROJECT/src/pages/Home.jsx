@@ -78,7 +78,7 @@ export const Home = () => {
                 ...prevWeather, newObject]);
             setError(null);
         } catch(err) {
-            setError(err + 'Cannot fetch weather, please check if your city is invalid!')
+            setError(err + 'Cannot fetch weather, please check if your city is invalid!');
             setWeather([]);
         } finally {
             setLoading(false);
