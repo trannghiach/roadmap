@@ -37,8 +37,7 @@ function App() {
             <h3>
               {data.name}, {data.sys.country}
             </h3>
-            <p>Nhiệt độ: {data.main.temp}°C</p>
-            <p>{data.weather[0].description}</p>
+            <p>Temperature: {data.main.temp}°C</p>
             <img
               src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
               alt="weather icon"
