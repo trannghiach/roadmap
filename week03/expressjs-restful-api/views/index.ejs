@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restful miniproject</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen flex">
+        <div class="flex flex-1 flex-col justify-center items-center gap-36">
+            <div class="flex gap-2 items-center">
+                <p>New Task:</p>
+                <input type="text" name="content" id="task-input" class="border-b border-b-black outline-none" required/>
+                <button onclick="addTask()" class="border border-black rounded-full px-3 py-1 hover:bg-gray-700 hover:border-white hover:text-white">Add</button>
+            </div>
+            <div class="flex flex-col gap-2 items-center justify-center" id="task-list">
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+        })
+
+        async function loadTasks() {
+            const tasks = await (await fetch('/tasks')).json();
+
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML='';
+
+            tasks.forEach(task => {
+                const div = document.createElement('div');
+                div.classList.add('flex', 'gap-2', 'items-center');
+                div.innerHTML = `
+                    <p class="text-xs">${task.id}</p>
+                    <span class="${task.done ? "line-through italic" : ''}">${task.content}</span>
+                    <input type="checkbox" id="toggle-task-${task.id}" ${task.done ? 'checked' : ''} onchange="toggleTask(${task.id})"/>
+                    <button onclick="deleteTask(${task.id})"">X</button>
+                `;
+                taskList.appendChild(div);
+            });
+        }
+
+        async function addTask() {
+            const content = document.getElementById('task-input').value;
+
+            await fetch('/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: content, done: false })
+            });
+
+            document.getElementById('task-input').value = '';
+            loadTasks();
+        }
+
+        async function deleteTask(id) {
+            await fetch(`/tasks/${id}`, {
+                method: 'DELETE',
+            });
+            loadTasks();
+        }
+
+        async function toggleTask(id) {
+            const done = document.getElementById(`toggle-task-${id}`).checked;
+            await fetch(`/tasks/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ done: done })
+            })
+            loadTasks();
+        }
+    </script>
+</body>
+</html>
