@@ -50,6 +50,7 @@ const FightEvent = ({ myChess, enemyChess, onFightEnd, onRunEnd, isMyEnhanced, i
         }
     }
 
+    // TODO: fix this part, it causes the bug that step 3 waves successively
     if(myChess.locked > 0) {
         onRunEnd('skip');
     }
