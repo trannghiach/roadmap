@@ -59,7 +59,7 @@ const FightEvent = ({ myChess, enemyChess, onFightEnd, onRunEnd, isMyEnhanced, i
 
   return (
     <>
-        <div className='flex gap-5 justify-center items-center'>
+        <div className='flex gap-5 justify-center items-center border border-gray-300 py-2 px-3 rounded-lg'>
             <button onClick={handleFight} className='bg-green-500 text-white px-5 py-2 rounded-lg'>Fight</button>
             <button onClick={handleRun} 
                     className={`${winrate < 55 ? 'bg-red-500' : 'bg-cyan-500' } text-white px-5 py-2 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed`}
