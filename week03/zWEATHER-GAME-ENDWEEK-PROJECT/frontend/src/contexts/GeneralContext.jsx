@@ -46,6 +46,27 @@ const iconRate = {
   "50n": 5,
 };
 
+const iconGroup = {
+  "01d": 1,
+  "01n": 2,
+  "02d": 3,
+  "02n": 4,
+  "03d": 5,
+  "03n": 5,
+  "04d": 6,
+  "04n": 6,
+  "09d": 7,
+  "09n": 7,
+  "10d": 8,
+  "10n": 9,
+  "11d": 10,
+  "11n": 10,
+  "13d": 11,
+  "13n": 11,
+  "50d": 12,
+  "50n": 12,
+}
+
 const weatherShadows = {
   Clouds: "shadow-gray-500",          // Nhiều mây (phổ biến nhất) → Xám nhạt
   Clear: "shadow-blue-400",           // Trời quang → Xanh dương nhạt
@@ -110,5 +131,6 @@ export {
     iconRate,
     weatherShadows,
     testWeatherData,
-    weatherMainDistribution
+    weatherMainDistribution,
+    iconGroup
 }
