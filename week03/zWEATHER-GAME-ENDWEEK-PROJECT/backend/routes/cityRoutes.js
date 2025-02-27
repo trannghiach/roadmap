@@ -1,7 +1,7 @@
 const express = require('express');
-const { get5RandomCities } = require('../controllers/cityController');
+const { getRandomCities } = require('../controllers/cityController');
 const router = express.Router();
 
-router.get('/cities', get5RandomCities);
+router.get('/cities/:size?', getRandomCities);
 
 module.exports = router;

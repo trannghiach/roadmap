@@ -8,7 +8,7 @@ const Header = () => {
     }
     return (
         <>
-            <div className="w-16 h-16 flex justify-center items-center fixed rounded-full top-8 left-8 cursor-pointer shadow-xl shadow-cyan-200 z-20" onClick={handleClick}>
+            <div className="w-16 h-16 flex justify-center items-center fixed rounded-full top-8 left-8 cursor-pointer border-x-2 border-gray-400 z-20 bg-white" onClick={handleClick}>
                 <p className="text-2xl">🏠</p>
             </div>
         </>
