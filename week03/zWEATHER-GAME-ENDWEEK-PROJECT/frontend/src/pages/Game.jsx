@@ -36,7 +36,7 @@ export const Game = () => {
     useEffect(() => {
         const fetch5StarterSquad = async () => {
             try {
-                const res = await axios.get(`${backEndURL}api/cities/5`);
+                const res = await axios.get(`${backEndURL}/api/cities/5`);
                 if(!res.data) return;
                 starterSquadRef.current = res.data;
             } catch(err) {
