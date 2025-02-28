@@ -123,7 +123,7 @@ const weatherMainDistribution = {
   "Tornado": 0.5       // 0.5%
 };
 
-const backEndURL = 'https://weather-game-lilsadfoqs.onrender.com/';
+const backEndURL = 'https://weather-game-lilsadfoqs.onrender.com';
 
 export {
     API_KEY,
