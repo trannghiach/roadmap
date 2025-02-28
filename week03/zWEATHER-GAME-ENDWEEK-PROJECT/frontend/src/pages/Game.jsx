@@ -21,6 +21,12 @@ export const Game = () => {
 
     console.log(round);
     console.log('my squad: ', mySquad);
+    console.log('data: ', data);
+    console.log('array: ', Array.from({ length: 5 }, () => ({
+        main: 'Clear',
+        icon: '01d',
+        qty: 1
+    })));
     
     useEffect(() => {
         const fetch5StarterSquad = async () => {
@@ -36,6 +42,67 @@ export const Game = () => {
         fetch5StarterSquad();
         setRound(-1);
     }, []);
+
+    useEffect(() => {
+        if(mySquad.length === 0 || enemySquad.length === 0) return;
+        setGameOver(mySquad.every(chess => chess.locked > 0));
+    }, [wave]);
+    
+    useEffect(() => {
+        if(round < 0) return;
+
+        const fetchEnemyCity = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/api/cities/1`);
+                if(!res.data) return;
+                setData(res.data[0]);
+            } catch(err) {
+                console.error(err);
+            }
+        }
+        switch(round) {
+            case 10:
+                setData({name: 'BOSS 1', country: 'Clouds', lat: 0, lon: 0});
+                setEnemySquad(Array.from({ length: 5 }, () => ({
+                    main: "Drizzle",
+                    icon: "10d",
+                    qty: 1
+                })));
+                break;
+            case 20:
+                setData({name: 'BOSS 2', country: 'Rain', lat: 0, lon: 0});
+                setEnemySquad(Array.from({ length: 5 }, () => ({
+                    main: "Thunderstorm",
+                    icon: "11n",
+                    qty: 1
+                })));
+                break;
+            case 30:
+                setData({name: 'BOSS 3', country: 'Snow', lat: 0, lon: 0});
+                setEnemySquad(Array.from({ length: 5 }, () => ({
+                    main: "Sand",
+                    icon: "50d",
+                    qty: 1
+                })));
+                break;
+            case 40:
+                setData({name: 'BOSS 4', country: 'Clear Lv.2', lat: 0, lon: 0});
+                setEnemySquad(Array.from({ length: 5 }, () => ({
+                    main: "Tornado",
+                    icon: "50n",
+                    qty: 3
+                })));
+                break;
+            default:
+                fetchEnemyCity();
+                break;
+        }
+        setMySquad(mySquad.map(chess => ({
+            ...chess,
+            locked: chess.locked > 0 ? chess.locked - 1 : 0
+        })));
+
+    }, [round]);
 
     useEffect(() => {
         if(!data) return;
@@ -77,33 +144,33 @@ export const Game = () => {
                                 main: w.weather[0].main,
                                 icon: w.weather[0].icon,
                                 qty: 1,
-                                limit: 3,
+                                limit: 1,
                                 locked: 0
                             })));
                             break;
                         case 10:
-                            setEnemySquad(res.data.list.slice(0, 5).map(w => ({
+                            setEnemySquad(Array.from({ length: 5 }, () => ({
                                 main: Clouds,
                                 icon: "04n",
                                 qty: 1
                             })));
                             break;
                         case 20:
-                            setEnemySquad(res.data.list.slice(0, 5).map(w => ({
+                            setEnemySquad(Array.from({ length: 5 }, () => ({
                                 main: Rain,
                                 icon: "09n",
                                 qty: 1
                             })));
                             break;
                         case 30:
-                            setEnemySquad(res.data.list.slice(0, 5).map(w => ({
+                            setEnemySquad(Array.from({ length: 5 }, () => ({
                                 main: Snow,
                                 icon: "13n",
                                 qty: 1
                             })));
                             break;
                         case 40:
-                            setEnemySquad(res.data.list.slice(0, 5).map(w => ({
+                            setEnemySquad(Array.from({ length: 5 }, () => ({
                                 main: Clear,
                                 icon: "01n",
                                 qty: 3
@@ -136,42 +203,6 @@ export const Game = () => {
 
         return () => ignore = true;
     }, [data]);
-
-    useEffect(() => {
-        if(round < 0) return;
-
-        const fetchEnemyCity = async () => {
-            try {
-                const res = await axios.get(`http://localhost:5000/api/cities/1`);
-                if(!res.data) return;
-                setData(res.data[0]);
-            } catch(err) {
-                console.error(err);
-            }
-        }
-        switch(round) {
-            case 10:
-                setData({name: 'BOSS 1', country: 'Clouds', lat: 0, lon: 0});
-                break;
-            case 20:
-                setData({name: 'BOSS 2', country: 'Rain', lat: 0, lon: 0});
-                break;
-            case 30:
-                setData({name: 'BOSS 3', country: 'Snow', lat: 0, lon: 0});
-                break;
-            case 40:
-                setData({name: 'BOSS 4', country: 'Clear Lv.2', lat: 0, lon: 0});
-                break;
-            default:
-                fetchEnemyCity();
-                break;
-        }
-        setMySquad(mySquad.map(chess => ({
-            ...chess,
-            locked: chess.locked > 0 ? chess.locked - 1 : 0
-        })));
-
-    }, [round]);
 
     function handleFightEnd(meWin) {
         if(meWin) {
@@ -241,11 +272,6 @@ export const Game = () => {
         setData(city);
         setRound(r => r + 1);
     }
-
-    useEffect(() => {
-        if(mySquad.length === 0 || enemySquad.length === 0) return;
-        setGameOver(mySquad.every(chess => chess.locked > 0));
-    }, [wave]);
 
   return (
     <>
@@ -388,7 +414,7 @@ export const Game = () => {
                 <div className="flex flex-col items-center justify-center gap-4">
                     <p className="text-4xl font-bold text-center">Game Over</p>
                     <p className="text-2xl font-semibold text-center">You lost all your chesses</p>
-                    <p className="text-2xl font-semibold text-center">Your score: {round}</p>
+                    <p className="text-2xl font-semibold text-center">Your score: {round - 1}</p>
                     <a href={'/'} className="bg-blue-500 text-white px-4 py-2 rounded-lg" onClick={() => setGameOver(false)}>Play Again</a>
                 </div>
             </>
