@@ -2,7 +2,7 @@ import { DndContext, PointerSensor, closestCorners, useSensor, useSensors } from
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { useEffect, useRef, useState } from "react"
 import axios from 'axios'
-import { API_KEY, weatherIcons, weatherShadows, testWeatherData, iconGroup, weatherMainDistribution } from "../contexts/GeneralContext"
+import { API_KEY, weatherIcons, weatherShadows, testWeatherData, iconGroup, weatherMainDistribution, backEndURL } from "../contexts/GeneralContext"
 import FightEvent from "../components/FightEvent";
 import MySquad from '../components/MySquad';
 
@@ -36,7 +36,7 @@ export const Game = () => {
     useEffect(() => {
         const fetch5StarterSquad = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/cities/5`);
+                const res = await axios.get(`${backEndURL}/api/cities/5`);
                 if(!res.data) return;
                 starterSquadRef.current = res.data;
             } catch(err) {
@@ -64,7 +64,7 @@ export const Game = () => {
 
         const fetchEnemyCity = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/cities/1`);
+                const res = await axios.get(`${backEndURL}/api/cities/1`);
                 if(!res.data) return;
                 setData(res.data[0]);
             } catch(err) {

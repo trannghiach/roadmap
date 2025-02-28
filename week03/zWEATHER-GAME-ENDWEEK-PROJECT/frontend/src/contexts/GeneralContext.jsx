@@ -123,6 +123,8 @@ const weatherMainDistribution = {
   "Tornado": 0.5       // 0.5%
 };
 
+const backEndURL = 'https://weather-game-lilsadfoqs.onrender.com/';
+
 export {
     API_KEY,
     weatherColors,
@@ -132,5 +134,6 @@ export {
     weatherShadows,
     testWeatherData,
     weatherMainDistribution,
-    iconGroup
+    iconGroup,
+    backEndURL
 }
