@@ -1,7 +1,10 @@
+import { DndContext, PointerSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { useEffect, useRef, useState } from "react"
 import axios from 'axios'
 import { API_KEY, weatherIcons, weatherShadows, testWeatherData, iconGroup, weatherMainDistribution } from "../contexts/GeneralContext"
 import FightEvent from "../components/FightEvent";
+import MySquad from '../components/MySquad';
 
 export const Game = () => {
     //status state
@@ -14,6 +17,8 @@ export const Game = () => {
     const [enemySquad, setEnemySquad] = useState([]);
     const [wave, setWave] = useState(0);
     const [round, setRound] = useState(-2);
+    const [myMainActivated, setMyMainActivated] = useState(false);
+    const [rollCount, setRollCount] = useState(0);
 
     //utility state
     const [error, setError ] = useState(null);
@@ -46,6 +51,12 @@ export const Game = () => {
     useEffect(() => {
         if(mySquad.length === 0 || enemySquad.length === 0) return;
         setGameOver(mySquad.every(chess => chess.locked > 0));
+        const main = mySquad[0].main;
+        if(mySquad.every(chess => chess.main === main) && !myMainActivated) {
+            setMyMainActivated(true);
+        } else if(!mySquad.every(chess => chess.main === main) && myMainActivated) {
+            setMyMainActivated(false);
+        }
     }, [wave]);
     
     useEffect(() => {
@@ -61,6 +72,14 @@ export const Game = () => {
             }
         }
         switch(round) {
+            case 1:
+                if(mySquad.every(chess => chess.main === main) && !myMainActivated) {
+                    setMyMainActivated(true);
+                } else if(!mySquad.every(chess => chess.main === main) && myMainActivated) {
+                    setMyMainActivated(false);
+                }
+                fetchEnemyCity();
+                break;
             case 10:
                 setData({name: 'BOSS 1', country: 'Clouds', lat: 0, lon: 0});
                 setEnemySquad(Array.from({ length: 5 }, () => ({
@@ -101,6 +120,7 @@ export const Game = () => {
             ...chess,
             locked: chess.locked > 0 ? chess.locked - 1 : 0
         })));
+        setRollCount(1);
 
     }, [round]);
 
@@ -140,11 +160,12 @@ export const Game = () => {
 
                     switch(round) {
                         case 1:
-                            setMySquad(res.data.list.slice(0, 5).map(w => ({
+                            setMySquad(res.data.list.slice(0, 5).map((w, i) => ({
+                                id: `chess-${i}`,
                                 main: w.weather[0].main,
                                 icon: w.weather[0].icon,
                                 qty: 1,
-                                limit: 1,
+                                limit: 2,
                                 locked: 0
                             })));
                             break;
@@ -273,6 +294,36 @@ export const Game = () => {
         setRound(r => r + 1);
     }
 
+    const handleDragEnd = (e) => {
+        const { active, over } = e;
+        if(!over || active.id === over.id) {
+            return;
+        }
+
+        const targetItem = mySquad.find(item => item.id === over.id);
+        if (targetItem && targetItem.locked > 0) {
+            return; 
+        }
+
+        setMySquad((prevSquad) => {
+            const oldIndex = prevSquad.findIndex(item => item.id === active.id);
+            const newIndex = prevSquad.findIndex(item => item.id === over.id);
+    
+            const newSquad = [...prevSquad];
+            [newSquad[oldIndex], newSquad[newIndex]] = [newSquad[newIndex], newSquad[oldIndex]];
+    
+            return newSquad;
+        });
+
+        setRollCount(0);
+    };
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: { distance: 5 },
+        })
+    );
+    
   return (
     <>
         {!gameOver ? (
@@ -298,7 +349,14 @@ export const Game = () => {
                     )}
                     {data && (
                         <>  {mySquad.length > 0 && <p className="text-xl sm:text-2xl font-bold text-center">MY SQUAD</p>}
-                            <div className="flex flex-wrap justify-center sm:gap-13 gap-9 a">
+                            {mySquad && mySquad.length > 0 && myMainActivated && (
+                                <div className={`flex flex-col justify-center items-center rounded-[16px] px-3 py-1 
+                                    shadow mb-5 ${weatherShadows[mySquad[0].main]}`}>
+                                             <p className="font-bold">MAIN: {mySquad[0].main}</p> 
+                                             <p className="text-xs text-gray-600">(+{15/weatherMainDistribution[mySquad[0].main]})% winrate</p>
+                                </div>
+                            )}
+                            {/* <div className="flex flex-wrap justify-center sm:gap-13 gap-9 a">
                                 {mySquad ? mySquad.map((weatherChess, index) => (
                                     <div key={index} 
                                         className={`flex flex-col gap-0 rounded-[52px] shadow-2xl px-5 py-5 items-center mb-[36px] relative a
@@ -322,10 +380,33 @@ export const Game = () => {
                                         {weatherChess.locked > 0 && <p className="text-red-600 font-semibold text-xs">Locked ({weatherChess.locked} rounds left)</p>}
                                     </div>
                                 )) : <p>No chess</p>}
+                            </div> */}
+                            <div className="flex flex-wrap justify-center items-center sm:gap-13 gap-9 a">
+                                <DndContext collisionDetection={closestCorners} 
+                                        onDragEnd={handleDragEnd} 
+                                        sensors={sensors}
+                                        >
+                                    {mySquad && mySquad.length > 0 ? (
+                                        <SortableContext items={mySquad} strategy={horizontalListSortingStrategy}>
+                                            {mySquad.map((weatherChess, index) => (
+                                                <MySquad 
+                                                    key={weatherChess.id} 
+                                                    id={weatherChess.id} 
+                                                    weatherChess={weatherChess} 
+                                                    index={index} 
+                                                    wave={wave} 
+                                                    disabled={weatherChess.locked > 0} />
+                                            ))}
+                                        </SortableContext>
+                                        ) : (
+                                            <p>No chess</p>
+                                        )
+                                    }
+                                </DndContext>
                             </div>
                             {mySquad.length > 0 && enemySquad.length > 0 && !loading && (
                                 <>
-                                    <FightEvent myChess={mySquad[wave]} enemyChess={enemySquad[wave]} onFightEnd={handleFightEnd} onRunEnd={handleRunEnd} isMyEnhanced={isEnhanced(mySquad)} isEnemyEnhanced={isEnhanced(enemySquad)} />
+                                    <FightEvent myChess={mySquad[wave]} enemyChess={enemySquad[wave]} onFightEnd={handleFightEnd} onRunEnd={handleRunEnd} isMyEnhanced={myMainActivated} isEnemyEnhanced={isEnhanced(enemySquad)} />
                                 </>
                             )}
                             {loading && (

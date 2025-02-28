@@ -17,8 +17,8 @@ const FightEvent = ({ myChess, enemyChess, onFightEnd, onRunEnd, isMyEnhanced, i
         
         const updatePercentages = () => {
             
-            const myPercent = Math.round(iconRate[myChess.icon] * ((0.64) ** (Math.floor(Math.cbrt(myChess.qty)))) * (0.964 ** (myChess.qty - Math.floor(Math.cbrt(myChess.qty)))) * 10000) / 10000;
-            const enemyPercent = Math.round(iconRate[enemyChess.icon] * ((0.964 * 0.64) ** (Math.floor(Math.cbrt(enemyChess.qty)))) * (0.964 ** (enemyChess.qty - Math.floor(Math.cbrt(enemyChess.qty)))) * 10000) / 10000;
+            const myPercent = Math.round(iconRate[myChess.icon] * ((0.36) ** (Math.floor(Math.cbrt(myChess.qty)))) * (0.964 ** ((myChess.qty - 1 - Math.floor(Math.cbrt(myChess.qty))))) * 10000) / 10000;
+            const enemyPercent = Math.round(iconRate[enemyChess.icon] * ((0.36) ** (Math.floor(Math.cbrt(enemyChess.qty)))) * (0.964 ** ((enemyChess.qty - 1 - Math.floor(Math.cbrt(enemyChess.qty))))) * 10000) / 10000;
 
             if(!ignore) {
                 setMyPercentage(myPercent);
