@@ -5,7 +5,6 @@ const getRandomCities = async (req, res) => {
     console.log('size: ', size);
     try {
         const cities = await City.aggregate([{$sample: {size}}]);
-        console.log('cities: ', cities);
         res.json(cities);
     } catch(err) {
         res.status(500).json({message: err.message});
