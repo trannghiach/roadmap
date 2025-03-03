@@ -3,11 +3,11 @@ name: Node.js CI
 on:
   push:
     paths: 
-      - 'github-actions-cicd-docker/**'
+      - 'github-actions-cicd-docker/backend**'
     branches: [ main ]
   pull_request:
     paths: 
-        - 'github-actions-cicd-docker/**'
+        - 'github-actions-cicd-docker/backend**'
     branches: [ main ]
 
 jobs:
@@ -20,6 +20,6 @@ jobs:
         with:
           node-version: '14'
       - name: Set working directory
-        working-directory: ./week04/github-actions-cicd-docker
+        working-directory: ./week04/github-actions-cicd-docker/backend
       - run: npm install
       - run: npm test
