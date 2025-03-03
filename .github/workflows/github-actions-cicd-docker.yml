@@ -3,11 +3,11 @@ name: Node.js CI
 on:
   push:
     paths: 
-      - 'week04/github-actions-cicd-docker/backend**'
+      - 'week04/github-actions-cicd-docker/backend/**'
     branches: [ main ]
   pull_request:
     paths: 
-        - 'week04/github-actions-cicd-docker/backend**'
+        - 'week04/github-actions-cicd-docker/backend/**'
     branches: [ main ]
 
 jobs:
