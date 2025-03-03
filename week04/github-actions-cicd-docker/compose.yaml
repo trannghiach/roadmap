@@ -1,0 +1,47 @@
+services:
+  web:
+    depends_on:
+      - api
+    build: ./frontend
+    ports:
+      - 5173:5173
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    develop:
+      watch:
+        - path: ./frontend/package.json
+          action: rebuild
+        - path: ./frontend/package-lock.json
+          action: rebuild
+
+        - path: ./frontend
+          target: /app/frontend
+          action: sync
+  api:
+    build: ./backend
+    ports:
+     - 5000:5000
+    develop:
+      watch:
+        - path: ./backend/package.json
+          action: rebuild
+        - path: ./backend/package-lock.json
+          action: rebuild
+        
+        - path: ./backend
+          target: /app/backend
+          action: sync
+        
+    environment:
+      - DB_URI=mongodb+srv://trannghiach2:smFs9Kju3AcM6OWm@weathergamecluster.i1tew.mongodb.net/weather-game
+      - REACT_URL=http://localhost:5173
+
+  db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes: 
+      - weather-game:/data/db
+
+volumes:
+  weather-game:
