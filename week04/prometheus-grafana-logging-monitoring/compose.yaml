@@ -1,88 +1,106 @@
+networks:
+  app_network:
+    driver: bridge
+  monitoring:
+    driver: bridge
+
 services:
   web:
-    depends_on:
-      - api
     build: ./frontend
+    container_name: web
     ports:
       - 5173:5173
     environment:
       - VITE_API_URL=http://34.143.177.22:5000
+    depends_on:
+      - api
+    networks:
+      - app_network
 
   api:
-    depends_on:
-      - db
     build: ./backend
+    container_name: api
     ports:
       - 5000:5000
     environment:
       - DB_URI=mongodb+srv://trannghiach2:smFs9Kju3AcM6OWm@weathergamecluster.i1tew.mongodb.net/weather-game
       - REACT_URL=http://34.143.177.22:5173
-    logging:
-      driver: "json-file" #For Promtail to collect logs
+    depends_on:
+      - db
+    networks:
+      - app_network
+      - monitoring
 
   db:
     image: mongo:latest
+    container_name: db
     ports:
       - 27017:27017
     volumes: 
       - weather-game:/data/db
+    networks:
+      - app_network
   
   prometheus:
     image: prom/prometheus:latest
+    container-name: prometheus
+    restart: unless-stopped
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - prometheus-data:/prometheus
     ports:
       - 9090:9090
+    networks:
+      - monitoring
 
   loki:
-    image: loki:latest
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
     volumes:
       - ./loki-config.yaml:/etc/loki/loki-config.yaml
+      - loki-data:/loki
     command: -config.file=/etc/loki/loki-config.yaml
     ports:
       - 3100:3100
+    networks:
+      - monitoring
+
 
   promtail: 
     image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
     volumes:
       - ./promtail.yaml:/etc/promtail/promtail.yaml
       - /var/log:/var/log #Read logs from the system
       - /var/run/docker.sock:/var/run/docker.sock #Read logs from the container docker
     command: -config.file=/etc/promtail/promtail.yaml
+    networks:
+      - monitoring
     
-
-  tempo:
-    image: grafana/tempo:latest
-    volumes:
-      - ./tempo-config.yaml:/etc/tempo/tempo-config.yaml
-      - tempo-data:/tmp/tempo #Avoid missing important logs/traces when the docker is off
-    command: -config.file=/etc/tempo/tempo-config.yaml
-    ports:
-      - 3200:3200
-
-  mimir: 
-    image: grafana/mimir:latest
-    volumes:
-      - ./mimir-config.yaml:/etc/mimir/mimir-config.yaml
-      - mimir-data:/tmp/mimir #Avoid missing important logs/traces when the docker is off
-    command: -config.file=/etc/mimir/mimir-config.yaml
-    ports:
-      - 9009:9009
-
   grafana:
     image: grafana/grafana:latest
+    contaienr_name: grafana 
+    restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
     ports:
       - 3000:3000
+    networks:
+      - monitoring
 
   node-exporter:
     image: prom/node-exporter:latest
-    ports:
-      - 9100:9100
+    container-name: node-exporter
+    restart: unless-stopped
+    expose:
+      - 9100
+    networks:
+      - monitoring
 
 volumes:
   weather-game:
   grafana-data:
-  tempo-data:
-  mimir-data:
+  loki-data:
+  prometheus-data:
