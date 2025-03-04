@@ -1,0 +1,88 @@
+services:
+  web:
+    depends_on:
+      - api
+    build: ./frontend
+    ports:
+      - 5173:5173
+    environment:
+      - VITE_API_URL=http://34.143.177.22:5000
+
+  api:
+    depends_on:
+      - db
+    build: ./backend
+    ports:
+      - 5000:5000
+    environment:
+      - DB_URI=mongodb+srv://trannghiach2:smFs9Kju3AcM6OWm@weathergamecluster.i1tew.mongodb.net/weather-game
+      - REACT_URL=http://34.143.177.22:5173
+    logging:
+      driver: "json-file" #For Promtail to collect logs
+
+  db:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes: 
+      - weather-game:/data/db
+  
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+    ports:
+      - 9090:9090
+
+  loki:
+    image: loki:latest
+    volumes:
+      - ./loki-config.yaml:/etc/loki/loki-config.yaml
+    command: -config.file=/etc/loki/loki-config.yaml
+    ports:
+      - 3100:3100
+
+  promtail: 
+    image: grafana/promtail:latest
+    volumes:
+      - ./promtail.yaml:/etc/promtail/promtail.yaml
+      - /var/log:/var/log #Read logs from the system
+      - /var/run/docker.sock:/var/run/docker.sock #Read logs from the container docker
+    command: -config.file=/etc/promtail/promtail.yaml
+    
+
+  tempo:
+    image: grafana/tempo:latest
+    volumes:
+      - ./tempo-config.yaml:/etc/tempo/tempo-config.yaml
+      - tempo-data:/tmp/tempo #Avoid missing important logs/traces when the docker is off
+    command: -config.file=/etc/tempo/tempo-config.yaml
+    ports:
+      - 3200:3200
+
+  mimir: 
+    image: grafana/mimir:latest
+    volumes:
+      - ./mimir-config.yaml:/etc/mimir/mimir-config.yaml
+      - mimir-data:/tmp/mimir #Avoid missing important logs/traces when the docker is off
+    command: -config.file=/etc/mimir/mimir-config.yaml
+    ports:
+      - 9009:9009
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - 3000:3000
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - 9100:9100
+
+volumes:
+  weather-game:
+  grafana-data:
+  tempo-data:
+  mimir-data:
