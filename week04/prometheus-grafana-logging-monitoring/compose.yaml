@@ -7,7 +7,6 @@ networks:
 services:
   web:
     build: ./frontend
-    container_name: web
     ports:
       - 5173:5173
     environment:
@@ -19,7 +18,6 @@ services:
 
   api:
     build: ./backend
-    container_name: api
     ports:
       - 5000:5000
     environment:
@@ -33,7 +31,6 @@ services:
 
   db:
     image: mongo:latest
-    container_name: db
     ports:
       - 27017:27017
     volumes: 
@@ -43,7 +40,6 @@ services:
   
   prometheus:
     image: prom/prometheus:latest
-    container-name: prometheus
     restart: unless-stopped
     volumes:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
@@ -55,7 +51,6 @@ services:
 
   loki:
     image: grafana/loki:latest
-    container_name: loki
     restart: unless-stopped
     volumes:
       - loki-data:/loki
@@ -68,7 +63,6 @@ services:
 
   promtail: 
     image: grafana/promtail:latest
-    container_name: promtail
     restart: unless-stopped
     volumes:
       - ./promtail.yaml:/etc/promtail/promtail.yaml
@@ -80,7 +74,6 @@ services:
     
   grafana:
     image: grafana/grafana:latest
-    contaienr_name: grafana 
     restart: unless-stopped
     volumes:
       - grafana-data:/var/lib/grafana
@@ -91,7 +84,6 @@ services:
 
   node-exporter:
     image: prom/node-exporter:latest
-    container-name: node-exporter
     restart: unless-stopped
     expose:
       - 9100
