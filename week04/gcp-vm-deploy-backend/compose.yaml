@@ -6,7 +6,7 @@ services:
     ports:
       - 5173:5173
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - VITE_API_URL=http://34.143.177.22:5000
     develop:
       watch:
         - path: ./frontend/package.json
@@ -34,7 +34,7 @@ services:
         
     environment:
       - DB_URI=mongodb+srv://trannghiach2:smFs9Kju3AcM6OWm@weathergamecluster.i1tew.mongodb.net/weather-game
-      - REACT_URL=http://localhost:5173
+      - REACT_URL=http://34.143.177.22:5173
 
   db:
     image: mongo:latest
