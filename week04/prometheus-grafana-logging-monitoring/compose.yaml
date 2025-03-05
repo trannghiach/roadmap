@@ -42,7 +42,7 @@ services:
     image: prom/prometheus:latest
     restart: unless-stopped
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     ports:
       - 9090:9090
@@ -54,7 +54,7 @@ services:
     restart: unless-stopped
     volumes:
       - loki-data:/loki
-    command: -config.file=/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yml
     ports:
       - 3100:3100
     networks:
@@ -65,10 +65,10 @@ services:
     image: grafana/promtail:latest
     restart: unless-stopped
     volumes:
-      - ./promtail.yaml:/etc/promtail/promtail.yaml
+      - ./promtail.yaml:/etc/promtail/promtail.yml
       - /var/log:/var/log #Read logs from the system
       - /var/run/docker.sock:/var/run/docker.sock #Read logs from the container docker
-    command: -config.file=/etc/promtail/promtail.yaml
+    command: -config.file=/etc/promtail/promtail.yml
     networks:
       - monitoring
     
