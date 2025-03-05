@@ -42,7 +42,7 @@ services:
     image: prom/prometheus:latest
     restart: unless-stopped
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
     ports:
       - 9090:9090
@@ -65,7 +65,7 @@ services:
     image: grafana/promtail:latest
     restart: unless-stopped
     volumes:
-      - ./promtail.yaml:/etc/promtail/promtail.yml
+      - ./promtail.yml:/etc/promtail/promtail.yml
       - /var/log:/var/log #Read logs from the system
       - /var/run/docker.sock:/var/run/docker.sock #Read logs from the container docker
     command: -config.file=/etc/promtail/promtail.yml
