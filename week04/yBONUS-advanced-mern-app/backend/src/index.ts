@@ -6,6 +6,7 @@ import { NODE_ENV, PORT, WEB_URL } from "./constants/env";
 import errorHandler from "./middlewares/errorHandler";
 import { OK } from "./constants/http";
 import authRoutes from "./routes/auth.route";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -25,6 +26,10 @@ app.use(
         credentials: true,
     })
 );
+
+// chucaobuon: 
+// lilsadfoqs: Middleware allowed cookie parsing
+app.use(cookieParser());
 
 // chucaobuon: 
 // lilsadfoqs: Route to check server status

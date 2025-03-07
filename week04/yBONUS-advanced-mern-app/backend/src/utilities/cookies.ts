@@ -2,6 +2,7 @@ import { CookieOptions, Response } from "express";
 import { NODE_ENV } from "../constants/env";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date";
 
+export const REFRESH_PATH = "/auth/refresh"
 const secure = NODE_ENV !== "development";
 
 // chucaobuon: 
@@ -12,15 +13,15 @@ const defaults: CookieOptions = {
     secure
 }
 
-const getAccessTokenCookieOptions = (): CookieOptions => ({
+export const getAccessTokenCookieOptions = (): CookieOptions => ({
     ...defaults,
     expires: fifteenMinutesFromNow()
 });
 
-const getRefreshTokenCookieOptions = (): CookieOptions => ({
+export const getRefreshTokenCookieOptions = (): CookieOptions => ({
     ...defaults,
     expires: thirtyDaysFromNow(),
-    path: "/auth/refresh"
+    path: REFRESH_PATH
 });
 
 type Params = {
@@ -29,6 +30,16 @@ type Params = {
     accessToken: string
 }
 
+// chucaobuon: 
+// lilsadfoqs: Special utitlity that helps set tokens to cookies
 export const setAuthCookies = ({res, refreshToken, accessToken}: Params) => res
     .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
     .cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
+
+// chucaobuon: 
+// lilsadfoqs: Special utility that helps clear tokens out of cookies
+export const clearAuthCookies = (res: Response) => res
+    .clearCookie("accessToken")
+    .clearCookie("refreshToken", {
+        path: REFRESH_PATH
+    });

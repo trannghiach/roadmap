@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { compareValue, hashValue } from "../utilities/bcrypt";
 
-export interface UserDocument extends mongoose.Document {
+
+// chucaobuon: 
+// lilsadfoqs: Create the interface for the User Schema
+export interface IUserDocument extends mongoose.Document {
   email: string;
   password: string;
   verified: boolean;
@@ -9,22 +12,36 @@ export interface UserDocument extends mongoose.Document {
   updatedAt: Date;
   comparePassword(val: string): Promise<boolean>;
   omitPassword(): Pick<
-    UserDocument,
+    IUserDocument,
     "_id" | "email" | "verified" | "createdAt" | "updatedAt"
   >;
 }
 
-const userSchema = new mongoose.Schema<UserDocument>(
+// chucaobuon: 
+// lilsadfoqs: Create the schema of the interface
+const userSchema = new mongoose.Schema<IUserDocument>(
   {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    verified: { type: Boolean, required: true, default: false },
+    email: { 
+      type: String, 
+      required: true, 
+      unique: true 
+    },
+    password: { 
+      type: String, 
+      required: true 
+    },
+    verified: { 
+      type: Boolean, 
+      required: true, 
+      default: false },
   },
   {
     timestamps: true,
   }
 );
 
+// chucaobuon: 
+// lilsadfoqs: The pre-process of saving User
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
@@ -34,15 +51,19 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
+// chucaobuon: 
+// lilsadfoqs: Define the method comparing passwords
 userSchema.methods.comparePassword = async function (val: string) {
   return compareValue(val, this.password);
 };
 
+// chucaobuon: 
+// lilsadfoqs: Define the method getting everything of the User but password
 userSchema.methods.omitPassword = function () {
   const user = this.toObject();
   delete user.password;
   return user;
 };
 
-const UserModel = mongoose.model<UserDocument>("User", userSchema);
+const UserModel = mongoose.model<IUserDocument>("User", userSchema);
 export default UserModel;
