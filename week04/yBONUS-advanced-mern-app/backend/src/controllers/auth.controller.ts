@@ -1,13 +1,12 @@
 
 import catchErrors from "../utilities/catchErrors";
-import { createAccount, loginUser, refreshUserAccessToken } from "../services/auth.service";
+import { createAccount, loginUser, refreshUserAccessToken, verifyEmail } from "../services/auth.service";
 import { CREATED, OK, UNAUTHORIZED } from "../constants/http";
 import { clearAuthCookies, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthCookies } from "../utilities/cookies";
-import { loginSchema, registerSchema } from "./auth.schema";
+import { loginSchema, registerSchema, verificationCodeSchema } from "./auth.schema";
 import { verifyToken } from "../utilities/jwt";
 import SessionModel from "../models/session.model";
 import appAssert from "../utilities/appAssert";
-
 
 export const registerHandler = catchErrors(async (req, res) => {
     // chucaobuon: 
@@ -80,4 +79,14 @@ export const refreshHandler = catchErrors(async (req, res) => {
         .json({
             message: "AccessToken refreshed!"
         })
+});
+
+export const verifyEmailHandler = catchErrors(async (req, res) => {
+    const verificationCode = verificationCodeSchema.parse(req.params.code);
+
+    await verifyEmail(verificationCode);
+
+    return res.status(OK).json({
+        message: "Succesfully verified email!"
+    })
 });

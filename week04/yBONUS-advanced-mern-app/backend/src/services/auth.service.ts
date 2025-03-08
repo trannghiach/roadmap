@@ -1,12 +1,15 @@
 
-import { CONFLICT, UNAUTHORIZED } from "../constants/http";
+import { PORT, WEB_URL } from "../constants/env";
+import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED } from "../constants/http";
 import VerificationCodeType from "../constants/verificationCodeTypes";
 import SessionModel from '../models/session.model';
 import UserModel from "../models/user.model";
-import VerificationCodeModel from "../models/verificationCode.model";
+import VerificationCodeModel from '../models/verificationCode.model';
 import appAssert from "../utilities/appAssert";
 import { ONE_DAY_IN_MILISECONDS, oneYearFromNow, thirtyDaysFromNow } from "../utilities/date";
+import { getVerifyEmailTemplate } from "../utilities/emailTemplates";
 import { RefreshTokenPayload, RefreshTokenSignOptions, signToken, verifyToken } from "../utilities/jwt";
+import sendMail from "../utilities/sendMail";
 
 export type AuthParams = {
     email: string;
@@ -44,8 +47,17 @@ export const createAccount = async(data: AuthParams) => {
         expiresAt: oneYearFromNow()
     })
 
+    const url = `${WEB_URL}/email/verify/${verificationCode._id}`
     // chucaobuon: 
     // lilsadfoqs: Send verification email
+    try {
+        await sendMail({
+            to: user.email,
+            ...getVerifyEmailTemplate(url)
+        });
+    } catch (error) {
+        console.log(error);
+    }
 
     // chucaobuon: 
     // lilsadfoqs: Create session
@@ -167,3 +179,37 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
         newRefreshToken,
     }
 };
+ 
+export const verifyEmail = async (code: string) => {
+    // chucaobuon: 
+    // lilsadfoqs: Validate the existance of the verification code in DB
+    const validCode = await VerificationCodeModel.findOne({
+        _id: code,
+        type: VerificationCodeType.EmailVerification,
+        expiresAt: { $gt: new Date() }
+    });
+
+    appAssert(validCode, NOT_FOUND, "Verification code is invalid or expired!");
+
+    // chucaobuon: 
+    // lilsadfoqs: Find and update the user by id
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+        validCode.userId,
+        {
+            verified: true
+        },
+        { new: true }
+    );
+    appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to verify your email!");
+  
+    // chucaobuon: 
+    // lilsadfoqs: Delete the verified code from the DB
+    await validCode.deleteOne();
+
+    // chucaobuon: 
+    // lilsadfoqs: Return user
+    return {
+        user: updatedUser.omitPassword()
+    }
+}
