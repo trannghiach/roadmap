@@ -17,8 +17,8 @@ const getEmailTo = (to: string) => {
     return NODE_ENV === "development" ? "delivered@resend.dev" : to;
 }
 
-const sendMail = async ({ to, subject, text, html}: Params) => {
-    await resend.emails.send({
+export const sendMail = async ({ to, subject, text, html}: Params) => {
+    return await resend.emails.send({
         from: getEmailFrom(),
         to: getEmailTo(to),
         subject,
@@ -26,5 +26,3 @@ const sendMail = async ({ to, subject, text, html}: Params) => {
         html
     });
 };
-
-export default sendMail;

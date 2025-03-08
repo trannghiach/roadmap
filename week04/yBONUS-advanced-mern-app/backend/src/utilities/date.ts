@@ -18,3 +18,13 @@ export const fifteenMinutesFromNow = () =>
     );
 
 export const ONE_DAY_IN_MILISECONDS = 24 * 60 * 60 * 1000;
+
+export const fiveMinutesAgo = () => 
+    new Date(
+        Date.now() - 5 * 60 * 1000
+    );
+
+export const oneHourFromNow = () => 
+    new Date(
+        Date.now() + 1 * 60 * 60 * 1000
+    )
