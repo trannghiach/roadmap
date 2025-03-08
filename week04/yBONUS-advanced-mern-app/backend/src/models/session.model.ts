@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { thirtyDaysFromNow } from "../utilities/date";
 
 // chucaobuon: 
 // lilsadfoqs: Create the interface for the Session Schema
-export interface ISessionDocument extends mongoose.Document {
+export interface ISessionDocument extends mongoose.Document<Types.ObjectId> {
     userId: mongoose.Types.ObjectId;
     userAgent?: string;
     createdAt: Date;

@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import VerificationCodeType from "../constants/verificationCodeTypes";
 
 // chucaobuon: 
 // lilsadfoqs: Create the interface for the Verification Code Schema
-export interface IVerificationCodeDocument extends mongoose.Document {
+export interface IVerificationCodeDocument extends mongoose.Document<Types.ObjectId> {
     userId: mongoose.Types.ObjectId;
     type: VerificationCodeType;
     expiresAt: Date;

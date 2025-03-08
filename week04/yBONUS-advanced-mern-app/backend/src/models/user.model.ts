@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { compareValue, hashValue } from "../utilities/bcrypt";
 
 
 // chucaobuon: 
 // lilsadfoqs: Create the interface for the User Schema
-export interface IUserDocument extends mongoose.Document {
+export interface IUserDocument extends mongoose.Document<Types.ObjectId> {
   email: string;
   password: string;
   verified: boolean;
