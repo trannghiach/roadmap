@@ -26,9 +26,9 @@ const UserMenu = () => {
                 <Avatar src='#' />
             </MenuButton>
             <MenuList>
-                <MenuItem onClick={() => navigate("/")}>Profile</MenuItem>
-                <MenuItem onClick={() => navigate("/settings")}>Settings</MenuItem>
-                <MenuItem onClick={signOut}>Logout</MenuItem>
+                <MenuItem key={"profile"} onClick={() => navigate("/")}>Profile</MenuItem>
+                <MenuItem key={"settings"} onClick={() => navigate("/settings")}>Settings</MenuItem>
+                <MenuItem key={"logout"} onClick={signOut}>Logout</MenuItem>
             </MenuList>
         </Menu>
     </>

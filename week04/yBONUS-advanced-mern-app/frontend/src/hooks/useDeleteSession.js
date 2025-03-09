@@ -11,8 +11,8 @@ const useDeleteSession = (sessionId) => {
     } = useMutation({
         mutationFn: () => deleteSession(sessionId),
         onSuccess: () => {
-            queryClient.setQueryData([SESSIONS], (cache) => {
-                cache.fiter(session => session._id !== sessionId)
+            queryClient.setQueryData([SESSIONS], cache => {
+                cache.filter(session => session._id !== sessionId)
             })
         }
     });

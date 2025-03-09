@@ -1,0 +1,11 @@
+{
+    local_certs
+}
+
+auth.localhost {
+    reverse_proxy web:5173
+}
+
+api.auth.localhost {
+    reverse_proxy api:1205
+}

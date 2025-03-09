@@ -3,14 +3,13 @@ import { NODE_ENV } from "../constants/env";
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "./date";
 
 export const REFRESH_PATH = "/auth/refresh"
-const secure = NODE_ENV !== "development";
 
 // chucaobuon: 
 // lilsadfoqs: Set cookies with our own configured options
 const defaults: CookieOptions = {
     sameSite: "strict",
     httpOnly: true,
-    secure
+    secure: true
 }
 
 export const getAccessTokenCookieOptions = (): CookieOptions => ({
