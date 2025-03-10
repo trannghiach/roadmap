@@ -1,4 +1,6 @@
-FROM node:22-bookworm-slim
+# chucaobuon: 
+# lilsadfoqs: Dev stage
+FROM node:22-bookworm-slim AS development
 
 WORKDIR /app
 
@@ -8,4 +10,20 @@ RUN npm ci
 
 COPY . .
 
+RUN npm run build
+
 CMD ["npm", "run", "dev"]
+
+# chucaobuon: 
+# lilsadfoqs: Prod stage
+FROM node:22-bookworm-slim AS production
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci --only=production
+
+COPY --from=development /app/dist ./dist
+
+CMD ["node", "dist/index.js"]

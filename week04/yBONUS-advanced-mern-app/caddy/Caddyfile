@@ -1,11 +1,49 @@
-{
-    local_certs
+{$DOMAIN_NAME:invalid} {
+	encode gzip
+    reverse_proxy web:80
 }
 
-auth.localhost {
-    reverse_proxy web:5173
+www.{$DOMAIN_NAME:invalid} {
+	redir https://{$DOMAIN_NAME:invalid}{uri} permanent
 }
 
-api.auth.localhost {
+api.{$DOMAIN_NAME:invalid} {
     reverse_proxy api:1205
+
+	header {
+		-X-Powered-By
+		-Server
+
+		# chucaobuon: 
+		# lilsadfoqs: enable HSTS
+		Strict-Transport-Security max-age=31536000;
+
+		# chucaobuon: 
+		# lilsadfoqs: disable clients from sniffing the media type
+		X-Content-Type-Options nosniff
+
+		# chucaobuon: 
+		# lilsadfoqs: clickjacking protection
+		X-Frame-Options DENY
+
+		# chucaobuon: 
+		# lilsadfoqs: XSS protection
+		X-XSS-Protection "1; node=block"
+	}
+
+	rate_limit {
+		# chucaobuon: 
+		# lilsadfoqs: limit requests based on IP addrs
+		zone api_limit {
+			key {http.request.header.CF-Connecting-IP}
+			events 100
+			window 1m
+		}
+
+		zone burst_limit {
+			key {http.request.header.CF-Connecting-IP}
+			events 20
+			window 1s
+		}
+	}
 }
